@@ -1,5 +1,6 @@
 package tests;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -13,8 +14,8 @@ public class GoogleSearchTest {
 
     @BeforeMethod
     public void setup() {
-        // Use WebDriverManager or set system property manually
-        System.setProperty("webdriver.chrome.driver", "chromedriver");
+        // Automatically downloads and sets up chromedriver
+        WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
     }
 
@@ -24,6 +25,14 @@ public class GoogleSearchTest {
         WebElement searchBox = driver.findElement(By.name("q"));
         searchBox.sendKeys("Selenium GitHub Actions");
         searchBox.submit();
+
+        // Wait for the title to update
+        try {
+            Thread.sleep(2000); // Not ideal in production (use WebDriverWait instead)
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         Assert.assertTrue(driver.getTitle().toLowerCase().contains("selenium"));
     }
 
